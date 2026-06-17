@@ -5,11 +5,24 @@ export class AuthController {
      * Simula un servidor de autenticación que genera un token.
      */
     static async generateToken(req, res) {
-        // TODO: Implementar generación de token.
-        // 1. Obtener credenciales (username/password) del req.body.
-        // 2. Validar credenciales de forma simulada (ej. if user === 'admin'...).
-        // 3. Si son válidas, crear un payload y llamar a JwtService.signToken(payload).
-        // 4. Responder con el token generado.
-        // 5. Si son inválidas, responder con status 401.
+        const { username, password } = req.body;
+
+        // Validación simulada
+        if (username !== "admin" || password !== "admin123") {
+            return res.status(401).json({
+                message: "Credenciales inválidas"
+            });
+        }
+
+        const payload = {
+            id: 1,
+            name: "Administrador"
+        };
+
+        const token = JwtService.signToken(payload);
+
+        return res.status(200).json({
+            token
+        });
     }
 }
