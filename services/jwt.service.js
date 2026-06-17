@@ -8,12 +8,18 @@ export class JwtService {
      * @returns {string} El token JWT generado.
      */
     static signToken(payload) {
-        // TODO: Implementar lógica de firmado.
-        // 1. Verificar si config.ALGORITHM es 'RS256' o 'HS256'.
-        // 2. Si es 'RS256', usar config.PRIVATE_KEY.
-        // 3. Si es 'HS256', usar config.JWT_SECRET.
-        // 4. Establecer un tiempo de expiración (ej. 1h).
-        // 5. Retornar el token firmado usando jwt.sign().
+        const claims = {
+            sub: String(payload.id),
+            name: payload.name,
+            exp: Math.floor(Date.now() / 1000) + 60 // 1 minuto
+        };
+
+        const key = config.JWT_SECRET;
+        if (config.ALGORITHM === 'RS256') key = config.PRIVATE_KEY;
+
+        return jwt.sign(claims, key, {
+            algorithm: config.ALGORITHM
+        });
     }
 
     /**
@@ -22,11 +28,15 @@ export class JwtService {
      * @returns {Object|null} El payload decodificado o null si es inválido.
      */
     static verifyToken(token) {
-        // TODO: Implementar lógica de verificación.
-        // 1. Verificar si config.ALGORITHM es 'RS256' o 'HS256'.
-        // 2. Si es 'RS256', usar config.PUBLIC_KEY para verificar.
-        // 3. Si es 'HS256', usar config.JWT_SECRET para verificar.
-        // 4. Retornar el payload decodificado usando jwt.verify().
-        // 5. Manejar posibles errores (token expirado, firma inválida) y retornar null.
+        try {
+            const key = config.JWT_SECRET;
+            if (config.ALGORITHM === 'RS256') key = config.PUBLIC_KEY;
+
+            return jwt.verify(token, key, {
+                algorithms: [config.ALGORITHM]
+            });
+        } catch (error) {
+            return null;
+        }
     }
 }
