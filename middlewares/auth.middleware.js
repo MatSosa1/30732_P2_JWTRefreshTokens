@@ -1,4 +1,5 @@
 import { JwtService } from '../services/jwt.service.js';
+import * as Sentry from '@sentry/node';
 
 export const authMiddleware = (req, res, next) => {
     try {

@@ -19,6 +19,12 @@ app.use('/', resourceRoutes);
 
 Sentry.setupExpressErrorHandler(app);
 
+app.use((err, req, res, next) => {
+    res.status(500).json({
+        message: 'Internal Server Error'
+    });
+});
+
 app.listen(config.PORT, () => {
     console.log(`Server running on http://localhost:${config.PORT}`);
 });
