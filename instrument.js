@@ -1,11 +1,11 @@
-require('dotenv').config();
-const Sentry = require("@sentry/node");
-const pkg = require('../package.json')
+import 'dotenv/config';
+import * as Sentry from '@sentry/node';
+import pkg from './package.json' with { type: 'json' };
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   environment: process.env.NODE_ENV || 'development',
-  release: process.env.SENTRY_RELEASE || `espechat@${pkg.version}`,
+  release: process.env.SENTRY_RELEASE || `jwt@${pkg.version}`,
   tracesSampleRate: 0,
   sampleRate: 1.0,  // 100% de errores
   sendDefaultPii: false,
